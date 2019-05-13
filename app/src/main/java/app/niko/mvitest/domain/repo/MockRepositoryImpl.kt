@@ -9,6 +9,12 @@ import java.util.concurrent.TimeUnit
 class MockRepositoryImpl : Repository {
     override fun login(model: UserDataModel): Observable<LoginResponseModel> {
         return Observable.timer(5, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
-                .map { LoginResponseModel() }
+                .flatMap {
+                    if (model.username != "admin" && model.password != "admin") {
+                        Observable.error(Throwable("access dined"))
+                    } else {
+                        Observable.just(LoginResponseModel())
+                    }
+                }
     }
 }

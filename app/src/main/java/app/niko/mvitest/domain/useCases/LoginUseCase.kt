@@ -11,10 +11,6 @@ class LoginUseCase
 @Inject constructor(repository: Repository)
     : BaseUseCase<Repository, UserDataModel, String>(repository) {
     override fun createObservable(arg: UserDataModel?): Observable<String> {
-        return if (arg!!.username != "admin" && arg!!.password != "admin") {
-            Observable.error(Throwable("access dined"))
-        } else {
-            repository.login(arg).map { it.result }
-        }
+        return repository.login(arg!!).map { it.result }
     }
 }
