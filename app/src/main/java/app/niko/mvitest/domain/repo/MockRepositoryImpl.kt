@@ -10,10 +10,10 @@ class MockRepositoryImpl : Repository {
     override fun login(model: UserDataModel): Observable<LoginResponseModel> {
         return Observable.timer(5, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
                 .flatMap {
-                    if (model.username != "admin" && model.password != "admin") {
-                        Observable.error(Throwable("access dined"))
-                    } else {
+                    if (model.username == "admin" && model.password == "admin") {
                         Observable.just(LoginResponseModel())
+                    } else {
+                        Observable.error(Throwable("access dined"))
                     }
                 }
     }

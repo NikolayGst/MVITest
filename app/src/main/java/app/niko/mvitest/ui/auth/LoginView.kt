@@ -4,8 +4,6 @@ import app.niko.mvitest.domain.models.UserDataModel
 import com.zuluft.mvi.views.BaseView
 import io.reactivex.Observable
 
-interface LoginContract {
-    interface LoginView : BaseView<LoginViewState> {
-        fun onLoginClickIntent(): Observable<UserDataModel>
-    }
+interface LoginView : BaseView<LoginViewState> {
+    fun onLoginClickIntent(): Observable<UserDataModel>
 }

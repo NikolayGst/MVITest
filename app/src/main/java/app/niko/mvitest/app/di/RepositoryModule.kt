@@ -14,5 +14,4 @@ class RepositoryModule {
     fun provideMockRepository(): Repository {
         return MockRepositoryImpl()
     }
-
 }

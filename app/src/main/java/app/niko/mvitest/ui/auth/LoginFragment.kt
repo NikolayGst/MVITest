@@ -1,23 +1,29 @@
 package app.niko.mvitest.ui.auth
 
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import app.niko.mvitest.R
 import app.niko.mvitest.domain.models.UserDataModel
-import app.niko.mvitest.ui.home.HomeActivity
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
-import com.zuluft.mvi.activities.BaseActivity
 import com.zuluft.mvi.annotations.LayoutResourceId
+import com.zuluft.mvi.fragments.BaseFragment
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
-import kotlinx.android.synthetic.main.activity_auth.*
+import kotlinx.android.synthetic.main.fragment_login.*
 
-@LayoutResourceId(R.layout.activity_auth)
-class AuthActivity : BaseActivity<LoginViewState, LoginPresenter>(), LoginContract.LoginView {
+@LayoutResourceId(R.layout.fragment_login)
+class LoginFragment : BaseFragment<LoginViewState, LoginPresenter>(), LoginView {
+
+    companion object {
+        fun newInstance() : LoginFragment {
+            return LoginFragment().apply {
+                arguments = Bundle()
+            }
+        }
+    }
 
     override fun onPresenterReady(presenter: LoginPresenter) {
         presenter.attach(this)
@@ -28,7 +34,6 @@ class AuthActivity : BaseActivity<LoginViewState, LoginPresenter>(), LoginContra
         when (state) {
             is LoadingState -> showLoading()
             is ErrorState -> showError(state.throwable)
-            is SuccessState -> openHomePage()
         }
     }
 
@@ -38,18 +43,13 @@ class AuthActivity : BaseActivity<LoginViewState, LoginPresenter>(), LoginContra
 
     private fun showError(throwable: Throwable) {
         progress_bar.visibility = View.GONE
-        AlertDialog.Builder(this)
+        AlertDialog.Builder(requireContext())
                 .setMessage(throwable.message)
                 .setPositiveButton("OK", null)
                 .show()
     }
 
-    private fun openHomePage() {
-        startActivity(Intent(this, HomeActivity::class.java))
-        finish()
-    }
-
-    override fun renderView(savedInstanceState: Bundle?) {
+    override fun renderView(view: View?, savedInstanceState: Bundle?) {
         registerDisposables(
                 Observable.combineLatest(
                         RxTextView.textChanges(loginEdit),
